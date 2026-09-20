@@ -13,6 +13,10 @@ The stable production writer and a fresh Fieldnote Demo Swarm ID account complet
 5. Saved a second synthetic Purple Sunbird sighting without a photo. The original reader link discovered feed index 1 and displayed both records. The second record retained count 2, 07:35 local time, UTC+05:30, WGS84 coordinates 18.5362/73.7858, and 500-metre location uncertainty.
 6. Opened the original reader link in a new Chrome incognito window, with no writer or Swarm ID session. Both records and the photograph were retrieved and rendered successfully.
 7. A separate command-line process, using the independent reader implementation and no credentials, verified both publications. Captured network objects confirm that the second index points back to the first and retains its record reference.
+8. Signed out of the writer, cleared its origin-specific localStorage and sessionStorage, reloaded, and signed back in with the same identity. Both sightings and the original reader address returned from Swarm.
+9. Inspected both applications at a 375-pixel responsive viewport. Fixed reader page overflow caused by a hidden table heading, then checked the deployed reader, its horizontally scrolling table, the writer landing page and the sighting form.
+10. Entered an invalid reader link and then a real sighting reference in place of a notebook address. The reader showed distinct, specific errors and recovered when the valid notebook address was restored.
+11. Checked the deployed species-name fix: Common Kingfisher filled Alcedo atthis; changing the common name to Unidentified warbler cleared that scientific name.
 
 Public notebook: [Open the verified demonstration](https://fieldnote-reader-hrsh22.vercel.app/#notebook=b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8).
 
@@ -49,13 +53,13 @@ npm run build
 
 Mocked tests establish failure-path behavior; the live acceptance checks above separately establish that the sponsor gateway accepted actual writes and the other application retrieved them.
 
-## Remaining manual checks
+## Review and submission
 
-- Mobile viewport inspection and a complete sign-out/sign-back-in after clearing writer application storage have not yet been completed. A normal writer reload and a reader incognito session passed.
-- Capability-loss and malformed/checksum-failure behavior passed automated tests. Interactive browser demonstrations of those failures are still outstanding.
-- No demo video or official judging result is claimed.
+Fieldnote's repository was submitted to Problem 2 through the Loops workspace after explicit user approval. The saved URL survived a page reload, and Folio remained separately selected for Problem 1. See [submission record](../evidence/submission.json).
 
-Chrome's native automation stopped returning page contents during the mobile inspection attempt. The completed checks above were observed before that failure. This limitation is recorded rather than treating unobserved interactions as successful.
+The [Loops evaluator review](LOOPS_EVALUATION.md) records the source review, weighted criteria, fixed issues and remaining limitations. The evaluator command supplies a free review prompt; it does not return an official score.
+
+The remaining optional evidence work is a short walkthrough recording. Capability-loss, checksum-failure and conflict cases have automated coverage; not every negative scenario was manually reenacted. Chrome's earlier control failure was resolved sufficiently to complete the mobile and sign-out/recovery checks above.
 
 ## Independent network verification
 

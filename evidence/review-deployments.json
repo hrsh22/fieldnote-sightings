@@ -1,0 +1,24 @@
+{
+  "recordedAt": "2026-09-20T07:35:45.483Z",
+  "writer": {
+    "origin": "https://fieldnote-sightings-hrsh22.vercel.app",
+    "deploymentId": "dpl_3iceQt8aC3EwzRwV1JmABWJzQmsy"
+  },
+  "reader": {
+    "origin": "https://fieldnote-reader-hrsh22.vercel.app",
+    "deploymentId": "dpl_D8Jy1U8ctGeCwV3LZBybTnEdRXMZ"
+  },
+  "changes": [
+    "Clear stale scientific names when changing species",
+    "Contain the reader table within the mobile viewport",
+    "Label public observations without implying biological verification"
+  ],
+  "browserChecks": [
+    "375-pixel reader and writer layouts",
+    "Writer sighting form at 375 pixels",
+    "Species suggestion corrected after changing common name",
+    "Sign out, clear writer local/session storage, reload and sign back in",
+    "Both sightings and original notebook address recovered from Swarm",
+    "Invalid notebook link and wrong object format show different errors"
+  ]
+}

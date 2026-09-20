@@ -215,7 +215,7 @@ function showDetails(record: RecordData, reference: string) {
       "p",
       record.demonstration
         ? "DEMONSTRATION OBSERVATION"
-        : "VERIFIED FIELD OBSERVATION",
+        : "PUBLIC FIELD OBSERVATION",
       "kicker",
     ),
     element("h2", record.species.commonName),

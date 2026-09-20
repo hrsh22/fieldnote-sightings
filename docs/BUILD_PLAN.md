@@ -1,6 +1,6 @@
 # Problem 2 plan: Fieldnote
 
-Status: approved implementation plan. The two applications are built and deployed; sponsored uploads, same-link feed updates and independent incognito retrieval have passed live verification. See [VERIFICATION.md](VERIFICATION.md) for current evidence. The remainder records the original plan and its acceptance criteria.
+Status: approved implementation plan. The two applications are built and deployed; sponsored uploads, same-link feed updates, independent incognito retrieval, cleared-storage recovery and mobile inspection have passed live verification. The repository is submitted to Problem 2. See [VERIFICATION.md](VERIFICATION.md) for current evidence. The remainder records the original plan and its acceptance criteria.
 Prepared: 20 September 2026. Event deadline: 11:11 PM IST today.
 
 ## Product and repository decision

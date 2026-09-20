@@ -1,6 +1,6 @@
 # Problem 2 submission draft
 
-Status: prepared for review, not submitted. Use the Problem 2 workspace form; do not replace Folio's Problem 1 repository through the event-wide CLI record.
+Status: repository submitted through the Problem 2 workspace on 20 September 2026, following user approval. Loops displayed Saved and two submissions; after reloading, Problem 2 retained the Fieldnote URL and Problem 1 retained Folio. The form accepts a repository only; the description below is supporting project copy, not a claim that additional metadata fields were submitted.
 
 **Problem:** Take your records with you
 

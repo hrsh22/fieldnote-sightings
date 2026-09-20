@@ -8,6 +8,7 @@ A birding notebook whose records travel with you. Sign in with Swarm ID, record 
 - **Format contract:** [format/README.md](format/README.md)
 - **Verification status:** [docs/VERIFICATION.md](docs/VERIFICATION.md)
 - **Real network evidence:** [evidence/](evidence/)
+- **Loops evaluator review:** [docs/LOOPS_EVALUATION.md](docs/LOOPS_EVALUATION.md)
 
 Built for Road To Devcon V, Problem 2: **Take your records with you**. Folio, the Problem 1 project, has a separate repository.
 

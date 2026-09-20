@@ -227,8 +227,7 @@ export function SightingForm({
                       ...d,
                       commonName,
                       scientificName:
-                        species.find((s) => s[0] === commonName)?.[1] ??
-                        d.scientificName,
+                        species.find((s) => s[0] === commonName)?.[1] ?? "",
                     }));
                   }}
                 />
