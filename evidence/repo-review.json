@@ -1,0 +1,23 @@
+{
+  "kind": "local-repository-evaluation",
+  "observedAt": "2026-09-20T08:58:42.294873+00:00",
+  "problem": "take-your-records-with-you",
+  "repository": "https://github.com/hrsh22/fieldnote-sightings",
+  "reviewedCommit": "f65ea4628de0e17ca372484f8d002ce151bd45a1",
+  "command": "loops evaluate --event road-to-devcon-v --problem take-your-records-with-you --format json",
+  "workingDirectory": "fieldnote",
+  "commandExitCode": 0,
+  "returnedEvaluatorSha256": "70aa976cc09b86d9bb279e07cc09a2e2e0a64a30e60a6ef00123ea561c9dc746",
+  "returnedInstructionsNotOfficialScore": true,
+  "publishedTechnicalChecksReviewed": 8,
+  "technicalAssessment": "Each check has a reachable implementation and cited repository evidence; see docs/REPOSITORY_REVIEW.md. This is not a platform verdict.",
+  "automatedChecks": {
+    "tests": 20,
+    "pass": 20,
+    "fail": 0,
+    "typecheck": "passed",
+    "secretScan": "passed"
+  },
+  "officialJudgingAttemptUsed": false,
+  "report": "docs/REPOSITORY_REVIEW.md"
+}
