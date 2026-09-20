@@ -1,5 +1,6 @@
 # Fieldnote
 
+[Implementation CI and deployment verification](evidence/release-verification.json)
 [Repository evaluation and all eight published checks](docs/REPOSITORY_REVIEW.md) - source paths, tests, committed evidence and reproduction commands.
 
 A birding notebook whose records travel with you. Sign in with Swarm ID, record a sighting, and open the same notebook in an independently built reader. Public records, photos and the notebook index are stored on Swarm.

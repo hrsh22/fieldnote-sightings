@@ -1,0 +1,25 @@
+{
+  "kind": "implementation-release-verification",
+  "observedAt": "2026-09-20T13:26:53.856184+00:00",
+  "implementationCommit": "c9f3f91f1be51b8026047322112d9664ada9d200",
+  "ci": {
+    "run": 35513353716,
+    "url": "https://github.com/hrsh22/fieldnote-sightings/actions/runs/35513353716",
+    "conclusion": "success"
+  },
+  "automatedTests": 29,
+  "forkChecks": 0,
+  "deployments": [
+    {
+      "origin": "https://fieldnote-sightings-hrsh22.vercel.app",
+      "deploymentId": "dpl_9hXXt3H7Ws9cPTndY8cT7Wfkhjbt",
+      "state": "READY"
+    },
+    {
+      "origin": "https://fieldnote-reader-hrsh22.vercel.app",
+      "deploymentId": "dpl_8f1eKDNCG5Ljq95LqqfBNkxUf8xz",
+      "state": "READY"
+    }
+  ],
+  "note": "CI and deployments reference the implementation commit above. Subsequent documentation-only commits do not change the deployed application."
+}
