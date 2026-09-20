@@ -1,0 +1,19 @@
+{
+  "name": "@fieldnote/reader",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --serve",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ethersphere/bee-js": "13.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2",
+    "@types/node": "22.20.4"
+  }
+}

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="An independent reader for portable bird sightings on Swarm. No writer app or account required."
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>Open Fieldbook - Independent sighting reader</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/" aria-label="Open Fieldbook home"
+        ><span class="brand-icon">↗</span>Open Fieldbook<span
+          class="reader-badge"
+          >INDEPENDENT READER</span
+        ></a
+      ><a
+        href="https://github.com/hrsh22/fieldnote-sightings/tree/main/format"
+        target="_blank"
+        rel="noreferrer"
+        >The open format ↗</a
+      >
+    </header>
+    <main>
+      <section class="intro">
+        <div>
+          <p class="kicker">SAME RECORDS. A DIFFERENT WINDOW.</p>
+          <h1>Good field notes<br />have a life <em>beyond an app.</em></h1>
+          <p class="lede">
+            Open a birding notebook directly from Swarm. Its sightings, places
+            and photographs arrive with their meaning intact.
+          </p>
+        </div>
+        <aside>
+          <span class="aside-number">01 / 03</span>
+          <h2>Bring a link.<br />Leave the app behind.</h2>
+          <p>
+            No sign-in. No exported files. No connection to the app that wrote
+            the records.
+          </p>
+          <span class="small-rule"></span>
+          <p class="aside-foot">
+            This reader has its own code, its own validation and its own
+            connection to Swarm.
+          </p>
+        </aside>
+      </section>
+      <form id="open-form" class="open-form">
+        <label for="notebook">NOTEBOOK LINK</label>
+        <div>
+          <input
+            id="notebook"
+            required
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Paste a notebook link or public reference"
+          /><button id="open-button" type="submit">
+            Open fieldbook <span>↗</span>
+          </button>
+        </div>
+        <details>
+          <summary>Connection settings</summary>
+          <label for="gateway">Swarm API gateway</label
+          ><input
+            id="gateway"
+            type="url"
+            value="https://api.gateway.ethswarm.org"
+            required
+          />
+          <p>
+            Reads go directly to this gateway. Use an HTTPS API gateway or a
+            local Bee node. No credentials are sent.
+          </p>
+        </details>
+      </form>
+      <div id="status" class="status" role="status" aria-live="polite">
+        Waiting for a notebook link.
+      </div>
+      <section id="notebook-view" hidden>
+        <div class="notebook-heading">
+          <div>
+            <p class="kicker">THE OPEN FIELD RECORD</p>
+            <h2 id="notebook-title"></h2>
+            <p id="notebook-description"></p>
+          </div>
+          <button id="refresh" class="outline">Refresh from Swarm ↻</button>
+        </div>
+        <div class="metrics">
+          <div>
+            <strong id="count">0</strong><span>VERIFIED SIGHTINGS</span>
+          </div>
+          <div><strong id="species-count">0</strong><span>SPECIES</span></div>
+          <div><strong id="places-count">0</strong><span>PLACES</span></div>
+          <p id="updated"></p>
+        </div>
+        <div class="table-toolbar">
+          <input
+            id="search"
+            aria-label="Search sightings"
+            placeholder="Find a species, place, observer or date"
+          /><label
+            >Sort
+            <select id="sort">
+              <option value="date">Date spotted</option>
+              <option value="species">Species name</option>
+            </select></label
+          ><button id="copy" class="outline">Copy notebook link</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SPECIES</th>
+                <th>DATE SPOTTED</th>
+                <th>PLACE</th>
+                <th>OBSERVER</th>
+                <th>COUNT</th>
+                <th><span class="sr-only">Details</span></th>
+              </tr>
+            </thead>
+            <tbody id="records"></tbody>
+          </table>
+        </div>
+        <p id="no-results" hidden>No sightings match your search.</p>
+        <div id="failures" class="failures" hidden></div>
+        <details class="proof">
+          <summary>Network evidence and format details</summary>
+          <dl id="proof-data"></dl>
+          <p>
+            This shows retrieved references and verified checksums. A valid
+            signed feed establishes its publishing app key. An observer's
+            display name is self-declared.
+          </p>
+        </details>
+      </section>
+      <section id="welcome" class="welcome">
+        <span>↗</span>
+        <h2>
+          The notebook is the data.<br />The app is just a place to read it.
+        </h2>
+        <p>
+          Each record names its format and version, and carries the information
+          needed to understand it. This reader was implemented independently
+          from that published description.
+        </p>
+        <button id="demo" class="outline" hidden>
+          Open the demonstration notebook ↗
+        </button>
+      </section>
+    </main>
+    <footer>
+      <span>OPEN FIELDBOOK / FORMAT V1</span>
+      <p>
+        Public records, read independently. Storage availability depends on the
+        Swarm network and its postage.
+      </p>
+      <a
+        href="https://github.com/hrsh22/fieldnote-sightings/tree/main/apps/reader"
+        target="_blank"
+        rel="noreferrer"
+        >Reader source ↗</a
+      >
+    </footer>
+    <dialog id="detail">
+      <button
+        id="close-detail"
+        class="close"
+        aria-label="Close sighting details"
+      >
+        ×
+      </button>
+      <div id="detail-body"></div>
+    </dialog>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

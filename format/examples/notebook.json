@@ -1,0 +1,17 @@
+{
+  "format": "org.fieldnote.notebook",
+  "version": 1,
+  "title": "Example notebook",
+  "owner": "1234567890abcdef1234567890abcdef12345678",
+  "addressReference": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "updatedAt": "2026-09-20T00:00:00.000Z",
+  "previous": null,
+  "records": [
+    {
+      "id": "84d0a094-ec4d-4e3b-8b95-a7db7b659a33",
+      "reference": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sha256": "d2e8cea0685e7c449cfc3a1b5664f011d6ce8cff9e477ca5b0ac389ea054ea8f",
+      "bytes": 920
+    }
+  ]
+}

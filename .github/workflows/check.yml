@@ -1,0 +1,37 @@
+name: Verify Fieldnote
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run check:boundaries
+      - run: npm run check:secrets
+      - run: npm run build
+  independent-reader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build reader with writer source absent
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/fieldnote-reader"
+          cp -R apps/reader/. "$RUNNER_TEMP/fieldnote-reader/"
+          cd "$RUNNER_TEMP/fieldnote-reader"
+          npm ci
+          npm run typecheck
+          npm run build

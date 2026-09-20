@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "org.fieldnote.address"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "feed": {
+      "type": "object",
+      "properties": {
+        "owner": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "topic": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "type": {
+          "type": "string",
+          "const": "sequence"
+        },
+        "payload": {
+          "type": "string",
+          "const": "timestamp-be64+reference32"
+        }
+      },
+      "required": ["owner", "topic", "type", "payload"]
+    },
+    "contentEndpoint": {
+      "type": "string",
+      "const": "bytes"
+    }
+  },
+  "required": ["format", "version", "feed", "contentEndpoint"],
+  "$id": "https://raw.githubusercontent.com/hrsh22/fieldnote-sightings/main/format/address.schema.json",
+  "title": "Fieldnote address version 1"
+}

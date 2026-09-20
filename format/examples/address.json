@@ -1,0 +1,11 @@
+{
+  "format": "org.fieldnote.address",
+  "version": 1,
+  "feed": {
+    "owner": "1234567890abcdef1234567890abcdef12345678",
+    "topic": "5c1b3b9ee99ed5dd14ee3013dcb37476b86e36cc0f9cd36c9006bb5bf7c9287f",
+    "type": "sequence",
+    "payload": "timestamp-be64+reference32"
+  },
+  "contentEndpoint": "bytes"
+}

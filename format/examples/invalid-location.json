@@ -1,0 +1,37 @@
+{
+  "format": "org.fieldnote.sighting",
+  "version": 1,
+  "id": "84d0a094-ec4d-4e3b-8b95-a7db7b659a33",
+  "recordedAt": "2026-09-20T00:00:00.000Z",
+  "species": {
+    "commonName": "Common Kingfisher",
+    "scientificName": "Alcedo atthis"
+  },
+  "observed": {
+    "date": "1998-09-20",
+    "time": null,
+    "utcOffset": null,
+    "timezone": null,
+    "precision": "day"
+  },
+  "place": {
+    "name": "Illustrative location",
+    "latitude": 190,
+    "longitude": 73.8,
+    "datum": "WGS84",
+    "uncertaintyMeters": 1000,
+    "source": "manual"
+  },
+  "observer": {
+    "name": "Example observer",
+    "identityAddress": "1234567890abcdef1234567890abcdef12345678"
+  },
+  "publisher": {
+    "owner": "1234567890abcdef1234567890abcdef12345678",
+    "appOrigin": "https://writer.example.org"
+  },
+  "count": 1,
+  "notes": "A portable format example, not a real observation.",
+  "photo": null,
+  "demonstration": true
+}
