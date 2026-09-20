@@ -5,7 +5,7 @@ Prepared: 20 September 2026. Event deadline: 11:11 PM IST today.
 
 ## Product and repository decision
 
-Target all three problems with three separate GitHub repositories. Folio remains the Problem 1 entry. The proposed Problem 2 repository is `fieldnote-sightings`; the name is a working name and the repository has not been created.
+Target all three problems with three separate GitHub repositories. Folio remains the Problem 1 entry. The Problem 2 repository is now [fieldnote-sightings](https://github.com/hrsh22/fieldnote-sightings).
 
 Fieldnote is a birding notebook: record a species, when and where it was seen, who saw it, notes and an optional photo. A notebook link opens the same records in an independently built reader. Saving and reopening both use Swarm; there is no export/import step.
 
@@ -18,7 +18,7 @@ The Problem 2 deliverable explicitly asks for one repository containing the sigh
 | `format/`                | Markdown specification, JSON Schemas, sample objects | Define the format independently of either implementation |
 | `tests/` and `evidence/` | Contract checks, integration checks, public results  | Make every rubric claim reviewable                       |
 
-Deploy the writer and reader as separate Vercel projects from their respective roots. The reader is a separate application, not a Next route or tab. It must also build and run with the writer directory absent. Keep the new checkout inside the user's requested working area, excluded from Folio's tracking, with its own Git history. Exact checkout layout is an implementation detail to settle before creating it.
+Deploy the writer and reader as separate Vercel projects from their respective roots. The reader is a separate application, not a Next route or tab. It must also build and run with the writer directory absent. The new checkout lives in `rtd-5/fieldnote`, alongside the separate `rtd-5/folio` checkout, with its own Git history.
 
 ## User experience
 
