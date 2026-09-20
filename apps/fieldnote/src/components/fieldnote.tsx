@@ -12,7 +12,6 @@ import {
   Copy,
   ExternalLink,
   Feather,
-  Leaf,
   LoaderCircle,
   LogOut,
   MapPin,
@@ -128,13 +127,13 @@ function dateLabel(date: string) {
 
 export function Fieldnote() {
   const client = useRef<SwarmIdClient | null>(null);
+  const resumeDraftOnConnect = useRef(false);
   const busyRef = useRef(false);
   const generation = useRef(0);
   const [connection, setConnection] = useState<Connection>({
     canUpload: false,
   });
   const [ready, setReady] = useState(false);
-  const [connecting, setConnecting] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [notebook, setNotebook] = useState<LoadedNotebook | null>(null);
   const [loading, setLoading] = useState(false);
@@ -212,6 +211,13 @@ export function Fieldnote() {
           subsidisedGatewayUrl: `${GATEWAY}/`,
           timeout: 60000,
           initializationTimeout: 30000,
+          containerId: "swarm-id-control",
+          buttonConfig: {
+            connectText: "Sign in with Swarm ID",
+            backgroundColor: "#355941",
+            color: "#ffffff",
+            borderRadius: "7px",
+          },
           metadata: {
             name: "Fieldnote",
             description: "Your birding notebook, readable anywhere.",
@@ -219,17 +225,20 @@ export function Fieldnote() {
           onConnectionChange: (info) => {
             if (disposed) return;
             setConnection(info);
-            setConnecting(false);
+            if (info.identity && resumeDraftOnConnect.current) {
+              resumeDraftOnConnect.current = false;
+              setNotice("");
+              setFormOpen(true);
+            }
           },
         });
         client.current = instance;
         await instance.initialize();
         if (disposed) return;
         const frame = instance.getAuthIframe();
-        frame.style.cssText =
-          "position:fixed;width:1px;height:1px;bottom:0;right:0;border:0;opacity:0;pointer-events:none;";
-        frame.setAttribute("aria-hidden", "true");
-        frame.tabIndex = -1;
+        // Keep the provider's button directly clickable. Its popup must retain
+        // the iframe as its opener when third-party storage is partitioned.
+        frame.title = "Sign in with Swarm ID";
         setConnection(instance.connectionInfo);
         setReady(true);
       } catch (error) {
@@ -269,17 +278,19 @@ export function Fieldnote() {
       setNotebookRef("");
     }
   }, [currentOwner, demoRef, loadOwn, openNotebook]);
-  async function connect() {
-    if (!client.current || !ready) return;
-    setConnecting(true);
-    setError("");
-    try {
-      await client.current.connect();
-    } catch (e) {
-      setError(explainError(e));
-    } finally {
-      setConnecting(false);
+  function connect() {
+    if (!client.current || !ready) {
+      setError("Sign-in is still starting. Wait a moment, then try again.");
+      return;
     }
+    resumeDraftOnConnect.current = true;
+    setFormOpen(false);
+    setNotice(
+      "Use Sign in with Swarm ID at the top. Your draft will reopen after you sign in.",
+    );
+    const frame = client.current.getAuthIframe();
+    frame.scrollIntoView({ block: "center" });
+    frame.focus();
   }
   async function disconnect() {
     if (busyRef.current) return;
@@ -407,6 +418,14 @@ export function Fieldnote() {
           </button>
         </nav>
         <div className="account-controls">
+          <div
+            id="swarm-id-control"
+            style={{
+              width: 195,
+              height: 40,
+              display: ready && !connection.identity ? "block" : "none",
+            }}
+          />
           {connection.identity ? (
             <>
               <span className="account-name">
@@ -425,25 +444,17 @@ export function Fieldnote() {
                 <LogOut />
               </Button>
             </>
-          ) : (
+          ) : !ready ? (
             <Button
               variant="outline"
               size="sm"
-              onClick={connect}
-              disabled={!ready || connecting}
+              onClick={() => window.location.reload()}
+              disabled={initializing}
             >
-              {initializing || connecting ? (
-                <LoaderCircle className="spin" />
-              ) : (
-                <Leaf size={14} />
-              )}{" "}
-              {connecting
-                ? "Complete sign-in"
-                : initializing
-                  ? "Connecting"
-                  : "Sign in with Swarm ID"}
+              {initializing && <LoaderCircle className="spin" />}
+              {initializing ? "Connecting" : "Retry sign-in"}
             </Button>
-          )}
+          ) : null}
         </div>
       </header>
       <main>
