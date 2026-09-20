@@ -1,0 +1,38 @@
+{
+  "kind": "strict-source-evaluation",
+  "reviewCompletedAt": "2026-09-20T17:33:08.921330+00:00",
+  "reviewedCommit": "8f9a8bc2146a676ad097ce2604a261d9cfc889bd",
+  "repository": "https://github.com/hrsh22/fieldnote-sightings",
+  "evaluator": {
+    "command": "loops evaluate --event road-to-devcon-v --problem take-your-records-with-you --format json",
+    "cliVersion": "0.4.0",
+    "exitCode": 0,
+    "responseSavedAt": "2026-09-20T13:30:31.066406+00:00",
+    "responseSha256": "70aa976cc09b86d9bb279e07cc09a2e2e0a64a30e60a6ef00123ea561c9dc746",
+    "promptSha256": "384b83f0e51ba9f5c2c309c354c2fe462770aef3b2435aee021f9def5a177383",
+    "resultType": "problem-specific review prompt"
+  },
+  "review": {
+    "report": "docs/STRICT_EVALUATION.md",
+    "method": "Inspect implementation call paths, committed network evidence and CI against all eight technical checks and the problem-specific qualitative criterion.",
+    "additionalCriterion": "Exact Folio twenty-point paragraph supplied by the builder; applied directly to Folio and as supplementary mirror, usability, publication-choice, recovery and expiry checks for the other two problems.",
+    "assessment": "No new blocking defect found; historical-place entry and browser evidence can be improved.",
+    "officialScore": null,
+    "officialJudgingRequested": false,
+    "submissionChanged": false
+  },
+  "existingValidation": {
+    "ciRun": 35513540171,
+    "url": "https://github.com/hrsh22/fieldnote-sightings/actions/runs/35513540171",
+    "headSha": "8f9a8bc2146a676ad097ce2604a261d9cfc889bd",
+    "conclusion": "success",
+    "automatedTests": 29,
+    "forkChecks": 0,
+    "reusedExistingRun": true
+  },
+  "evaluationActions": {
+    "applicationSourceModified": false,
+    "newPublicWrites": false,
+    "newFinancialTransactions": false
+  }
+}
