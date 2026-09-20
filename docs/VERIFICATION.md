@@ -10,13 +10,13 @@ Updated 20 September 2026. This document records evidence, not an official judgi
 - The reader dependency graph contains its own three source modules and third-party dependencies, with no imports from the writer.
 - The source secret scan passes. Local test account credentials live only in the ignored `.runtime/private` directory with owner-only filesystem permissions.
 
-[GitHub Actions run 35495104634](https://github.com/hrsh22/fieldnote-sightings/actions/runs/35495104634) passed both jobs on commit `32392a1`: the complete test/typecheck/boundary/secret/build checks, and a separate reader build copied to a directory where the writer source is absent.
+[GitHub Actions run 35495305512](https://github.com/hrsh22/fieldnote-sightings/actions/runs/35495305512) passed both jobs on commit `9b64bb0`: the complete test/typecheck/boundary/secret/build checks, and a separate reader build copied to a directory where the writer source is absent.
 
 Deployments from that implementation:
 
 | Application | Stable origin | Deployment |
 | --- | --- | --- |
-| Writer | https://fieldnote-sightings-hrsh22.vercel.app | `dpl_3Fmuo8jHUgJkn7sBF1j23sycxqtZ` |
+| Writer | https://fieldnote-sightings-hrsh22.vercel.app | `dpl_Bz55HyednELR1338k2WWyF76i2FR` |
 | Reader | https://fieldnote-reader-hrsh22.vercel.app | `dpl_81H5PMkSzScZoTLhBigaKevdCBFy` |
 
 Run all checks from the repository root:
@@ -32,9 +32,13 @@ npm run build
 
 The mocked publication tests prove the application's guard and reconciliation behavior. They do not prove that the live sponsor gateway accepted an upload.
 
+## Account setup
+
+The dedicated Fieldnote Demo account was created. A user-provided screenshot confirmed Swarm ID reported a successful connection to Fieldnote on 20 September 2026. This initial setup was started from the local writer. The production origin has its own app-derived key and still needs a separate sign-in check.
+
 ## Live checks still required
 
-- Complete the dedicated test Swarm ID account and confirm sign-in at the stable writer origin.
+- Confirm the test account is signed in at the stable production writer origin.
 - Save a clearly marked demonstration record and photo through the sponsored gateway with no personal stamp.
 - Record the public descriptor, index, record and photo references and verify the actual network bytes.
 - Read the notebook at the independent reader origin with no writer session.
