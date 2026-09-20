@@ -264,6 +264,7 @@ export function Fieldnote() {
       void openNotebook(demoRef);
     } else {
       generation.current++;
+      setLoading(false);
       setNotebook(null);
       setNotebookRef("");
     }

@@ -1,3 +1,5 @@
+import { ZodError } from "zod";
+
 export class FieldnoteError extends Error {
   constructor(
     public code: string,
@@ -42,4 +44,3 @@ export function explainError(error: unknown): string {
     ? message
     : "This record could not be processed. Retry, or check its format in the independent reader.";
 }
-import { ZodError } from "zod";
