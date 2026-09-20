@@ -29,7 +29,7 @@ Fieldnote's one-notebook-per-app-key topic is SHA-256 over the UTF-8 string `org
 5c1b3b9ee99ed5dd14ee3013dcb37476b86e36cc0f9cd36c9006bb5bf7c9287f
 ```
 
-A reader must use the topic supplied by the descriptor instead of importing this constant from a writer. In bee-js 13.1.0, `bee.feed.makeReader(topic, owner).downloadReference()` reads this reference encoding. Swarm ID publishes it with `makeSequentialFeedWriter({ topic }).uploadRawPayload(referenceBytes, { index, hasTimestamp: true })`, omitting encryption keys and pin/tag options. Live interoperability evidence, when recorded, belongs in `evidence/`.
+A reader must use the topic supplied by the descriptor instead of importing this constant from a writer. In bee-js 13.1.0, `bee.feed.makeReader(topic, owner).downloadReference()` reads this reference encoding. Swarm ID publishes it with `makeSequentialFeedWriter({ topic }).uploadRawPayload(referenceBytes, { index, hasTimestamp: true })`, omitting encryption keys and pin/tag options. [Live interoperability evidence](../evidence/) records two successful publications and independent retrievals.
 
 ## Address descriptor
 

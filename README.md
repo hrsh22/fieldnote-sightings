@@ -4,8 +4,10 @@ A birding notebook whose records travel with you. Sign in with Swarm ID, record 
 
 - **Writer:** https://fieldnote-sightings-hrsh22.vercel.app
 - **Independent reader:** https://fieldnote-reader-hrsh22.vercel.app
+- **Live notebook, no sign-in:** [Open the verified demonstration](https://fieldnote-reader-hrsh22.vercel.app/#notebook=b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8)
 - **Format contract:** [format/README.md](format/README.md)
 - **Verification status:** [docs/VERIFICATION.md](docs/VERIFICATION.md)
+- **Real network evidence:** [evidence/](evidence/)
 
 Built for Road To Devcon V, Problem 2: **Take your records with you**. Folio, the Problem 1 project, has a separate repository.
 

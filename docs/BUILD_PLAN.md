@@ -1,6 +1,6 @@
 # Problem 2 plan: Fieldnote
 
-Status: approved implementation plan. The two applications are built and deployed; live account/upload verification is in progress. See [VERIFICATION.md](VERIFICATION.md) for current evidence. The remainder records the original plan and its acceptance criteria.
+Status: approved implementation plan. The two applications are built and deployed; sponsored uploads, same-link feed updates and independent incognito retrieval have passed live verification. See [VERIFICATION.md](VERIFICATION.md) for current evidence. The remainder records the original plan and its acceptance criteria.
 Prepared: 20 September 2026. Event deadline: 11:11 PM IST today.
 
 ## Product and repository decision
@@ -140,6 +140,6 @@ When complete, prepare a separate Problem 2 submission draft against its own rep
 - [Swarm ID subsidised gateway](https://swarm.snaha.net/docs/subsidised-gateway/).
 - [Public gateway source documentation](https://github.com/snaha/swarm-id/blob/7dbcfdf6bc047008936c4af61ba63a6a8f6eddba/docs-site/src/content/docs/public-gateway.mdx).
 - [Origin-derived keys](https://swarm.snaha.net/docs/).
-- Published `@snaha/swarm-id@0.4.1` package metadata and declaration files inspected without installing or changing dependencies. Capability and sequential feed APIs are present; live interoperation is still untested.
+- Published `@snaha/swarm-id@0.4.1` package metadata and declaration files inspected without installing or changing dependencies. Capability and sequential feed APIs are present; live interoperability has since passed and is recorded in evidence/.
 
 This plan does not constitute a submission or an official judging result.

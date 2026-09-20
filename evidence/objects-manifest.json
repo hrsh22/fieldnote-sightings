@@ -1,0 +1,41 @@
+{
+  "retrievedAt": "2026-09-20T07:10:41.490Z",
+  "gateway": "https://api.gateway.ethswarm.org",
+  "objects": [
+    {
+      "reference": "b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8",
+      "format": "org.fieldnote.address",
+      "version": 1,
+      "bytes": 264,
+      "sha256": "b69cc3fe88ef68f926fac2158fcab6dda17d5c30f08e6e1b8f27166c4db6d661"
+    },
+    {
+      "reference": "324feab1a24c1fa12268ded62308dbbb30398bb5d98fecdee7d6ca8dfa98ac2c",
+      "format": "org.fieldnote.notebook",
+      "version": 1,
+      "bytes": 780,
+      "sha256": "00724a17f3335aa4acfeb94bf5d0180135e264b5b025014b38c478b9fc0dc500"
+    },
+    {
+      "reference": "e685e2198acc87e7c7a7ba43e73e2ea32fa39b00c48f9d3ab8897277116abef4",
+      "format": "org.fieldnote.sighting",
+      "version": 1,
+      "bytes": 1004,
+      "sha256": "3cdc49dd96e0789208949bfde4802fe774b5ce0f2f8a9fbf540094150ea4d4e0"
+    },
+    {
+      "reference": "273d9eef39c575ef06d2981f12bfa6acbca0ba55dc160f169ec16b3e05da4750",
+      "format": "org.fieldnote.sighting",
+      "version": 1,
+      "bytes": 1434,
+      "sha256": "5ae667c874ba8f43254c101b3099711b96d15af79ae7f98cc0deef88857bd7d9"
+    },
+    {
+      "reference": "fee4d68bb07a2484e0c6dd383515964e92d96160a3a7294cd8b74a097abbcc82",
+      "format": "org.fieldnote.notebook",
+      "version": 1,
+      "bytes": 504,
+      "sha256": "b48fe9f58adb8e36bf6ebbb4f631494b57da2686dd92bd31d8a2e3c6cc697e34"
+    }
+  ]
+}
