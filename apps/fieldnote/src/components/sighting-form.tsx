@@ -19,33 +19,12 @@ import { Button } from "./ui/button";
 import { species } from "@/lib/species";
 import { MAX_PHOTO_BYTES, type SightingDraft } from "@/lib/format";
 import { explainError } from "@/lib/errors";
-
-const draftKey = "fieldnote.unsaved-draft.v1";
-function blankDraft() {
-  const d = new Date();
-  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  return {
-    commonName: "",
-    scientificName: "",
-    date: today,
-    time: "",
-    place: "",
-    latitude: "",
-    longitude: "",
-    uncertainty: "100",
-    count: "1",
-    notes: "",
-    observerName: "",
-    caption: "",
-    credit: "",
-    demonstration: false,
-    source: "manual" as "manual" | "device",
-  };
-}
+import { blankDraft, draftKey, restoreDraft } from "@/lib/draft";
 export function SightingForm({
   open,
   onOpenChange,
   name,
+  owner,
   canUpload,
   busy,
   stage,
@@ -57,6 +36,7 @@ export function SightingForm({
   open: boolean;
   onOpenChange: (v: boolean) => void;
   name: string;
+  owner: string;
   canUpload: boolean;
   busy: boolean;
   stage: string;
@@ -66,6 +46,7 @@ export function SightingForm({
   onSave: (
     draft: SightingDraft,
     photo?: { bytes: Uint8Array; caption: string; credit: string },
+    recordId?: string,
   ) => Promise<boolean>;
 }) {
   const [draft, setDraft] = useState(blankDraft);
@@ -74,21 +55,14 @@ export function SightingForm({
   const [error, setError] = useState("");
   const [locating, setLocating] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const [draftStorageAvailable, setDraftStorageAvailable] = useState(true);
+  const [confirmClear, setConfirmClear] = useState(false);
+  const photoMissing = Boolean(draft.photoName && !photo);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(draftKey);
-      if (raw) {
-        const value = JSON.parse(raw);
-        const base = blankDraft();
-        if (value && typeof value === "object")
-          for (const key of Object.keys(base) as (keyof typeof base)[]) {
-            if (typeof value[key] === typeof base[key])
-              Object.assign(base, { [key]: value[key] });
-          }
-        setDraft(base);
-      }
+      setDraft(restoreDraft(localStorage.getItem(draftKey)));
     } catch {
-      /* Draft recovery is optional. */
+      setDraftStorageAvailable(false);
     }
     setLoaded(true);
   }, []);
@@ -96,8 +70,9 @@ export function SightingForm({
     if (loaded)
       try {
         localStorage.setItem(draftKey, JSON.stringify(draft));
+        setDraftStorageAvailable(true);
       } catch {
-        /* Quota failure must not prevent network saves. */
+        setDraftStorageAvailable(false);
       }
   }, [draft, loaded]);
   useEffect(() => {
@@ -139,8 +114,24 @@ export function SightingForm({
     if (busy) return;
     setError("");
     try {
+      if (photoMissing)
+        throw new Error(
+          "Choose your draft's photograph again, or choose Continue without photo below.",
+        );
+      if (draft.publishingOwner && draft.publishingOwner !== owner)
+        throw new Error(
+          "This draft was sent from another account. Sign in to that account to check its earlier save. To start a different sighting, clear this draft first.",
+        );
       if (photo && photo.size > MAX_PHOTO_BYTES)
         throw new Error("Choose a photo smaller than 5 MB.");
+      const publishingDraft = { ...draft, publishingOwner: owner };
+      setDraft(publishingDraft);
+      // Persist before the network write so a reload can reconcile the same ID.
+      try {
+        localStorage.setItem(draftKey, JSON.stringify(publishingDraft));
+      } catch {
+        setDraftStorageAvailable(false);
+      }
       const observationDate = new Date(
         `${draft.date}T${draft.time || "12:00"}:00`,
       );
@@ -181,10 +172,12 @@ export function SightingForm({
               credit: draft.credit,
             }
           : undefined,
+        draft.recordId,
       );
       if (ok) {
         setDraft(blankDraft());
         setPhoto(null);
+        setConfirmClear(false);
         onOpenChange(false);
       }
     } catch (e) {
@@ -386,9 +379,33 @@ export function SightingForm({
                 aria-label="Add a photograph"
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
-                onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+                onChange={(e) => {
+                  const chosen = e.target.files?.[0];
+                  if (chosen) {
+                    setPhoto(chosen);
+                    set("photoName", chosen.name);
+                  }
+                }}
               />
             </label>
+            {photoMissing && (
+              <div className="draft-photo-warning" role="alert">
+                <strong>
+                  Your text draft is back. Its photo needs choosing again.
+                </strong>
+                <p>
+                  Browsers do not keep the selected file after a reload. Choose{" "}
+                  {draft.photoName} above so it is included in this sighting.
+                </p>
+                <button
+                  type="button"
+                  className="text-link"
+                  onClick={() => set("photoName", "")}
+                >
+                  Continue without photo
+                </button>
+              </div>
+            )}
             {photo && (
               <div className="photo-options">
                 <img src={preview} alt="Selected sighting photograph" />
@@ -412,7 +429,10 @@ export function SightingForm({
                   <button
                     type="button"
                     className="text-link"
-                    onClick={() => setPhoto(null)}
+                    onClick={() => {
+                      setPhoto(null);
+                      set("photoName", "");
+                    }}
                   >
                     Remove photo
                   </button>
@@ -432,7 +452,10 @@ export function SightingForm({
             <ShieldCheck size={18} />
             <span>
               This notebook is public. Share only photos and locations you want
-              others to read.
+              others to read. Use an approximate location for sensitive birds;
+              accuracy alone does not hide precise coordinates. Published
+              sightings cannot be edited or removed here. Photos are uploaded
+              unchanged and may contain location metadata.
             </span>
           </div>
           {(error || saveError) && (
@@ -450,19 +473,63 @@ export function SightingForm({
             <span role="status">
               {busy
                 ? stage
-                : "Your text draft stays on this device until saved."}
+                : draftStorageAvailable
+                  ? "Your text draft stays on this device until saved."
+                  : "This browser cannot keep your draft after a reload. Keep this window open until it is saved."}
             </span>
             {!signedIn ? (
               <Button type="button" onClick={onConnect}>
                 Sign in to save
               </Button>
             ) : (
-              <Button type="submit" disabled={busy || !canUpload}>
+              <Button
+                type="submit"
+                disabled={busy || !canUpload || photoMissing || !loaded}
+              >
                 {busy ? <LoaderCircle className="spin" /> : <Plus />}
                 {busy ? "Saving sighting" : "Save sighting"}
               </Button>
             )}
           </div>
+          {!busy && (
+            <div className="draft-actions">
+              {confirmClear ? (
+                <>
+                  <p>
+                    Clear only this device's draft? Published sightings stay in
+                    your notebook.
+                  </p>
+                  <button
+                    type="button"
+                    className="text-link"
+                    onClick={() => {
+                      setDraft(blankDraft());
+                      setPhoto(null);
+                      setError("");
+                      setConfirmClear(false);
+                    }}
+                  >
+                    Clear draft
+                  </button>
+                  <button
+                    type="button"
+                    className="text-link"
+                    onClick={() => setConfirmClear(false)}
+                  >
+                    Keep draft
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  className="text-link"
+                  onClick={() => setConfirmClear(true)}
+                >
+                  Start a fresh draft
+                </button>
+              )}
+            </div>
+          )}
         </form>
       </DialogContent>
     </Dialog>

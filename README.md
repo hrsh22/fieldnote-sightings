@@ -4,9 +4,6 @@
 
 A birding notebook whose records travel with you. Sign in with Swarm ID, record a sighting, and open the same notebook in an independently built reader. Public records, photos and the notebook index are stored on Swarm.
 
-- **Writer:** https://fieldnote-sightings-hrsh22.vercel.app
-- **Independent reader:** https://fieldnote-reader-hrsh22.vercel.app
-- **Live notebook, no sign-in:** [Open the verified demonstration](https://fieldnote-reader-hrsh22.vercel.app/#notebook=b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8)
 - **Format contract:** [format/README.md](format/README.md)
 - **Verification status:** [docs/VERIFICATION.md](docs/VERIFICATION.md)
 - **Real network evidence:** [evidence/](evidence/)
@@ -14,38 +11,15 @@ A birding notebook whose records travel with you. Sign in with Swarm ID, record 
 
 Built for Road To Devcon V, Problem 2: **Take your records with you**. Folio, the Problem 1 project, has a separate repository.
 
-## Try it
+## Review in GitHub
 
-1. Open the writer and sign in with Swarm ID. Use its default network settings for the sponsored upload path; a personal stamp or local Bee process is not required.
-2. Record a species, observation date, place, coordinates and coordinate uncertainty. Time, notes and a JPEG, PNG or WebP photo are optional.
-3. Save. Fieldnote checks your current upload capability before every write and verifies the uploaded content before confirming the notebook update.
-4. Select **Open in another reader**. The second application fetches the descriptor, signed feed, index, records and photo directly from Swarm, without signing in or importing a file.
-5. Bookmark that reader link. It resolves the latest notebook index, so subsequent sightings appear at the same address.
+1. Read the [criterion-by-criterion source map](docs/REPOSITORY_REVIEW.md), including the qualitative review and implementation evidence.
+2. Follow the normal data path: [writer loads from Swarm](apps/fieldnote/src/lib/network.ts), [guarded publication](apps/fieldnote/src/lib/publish.ts), and the [separate reader](apps/reader/src). The reader uses its own parser and network implementation.
+3. Inspect the [published format](format/README.md), [exact stored JSON objects](evidence/objects/) and [object manifest](evidence/objects-manifest.json). The records are self-describing without application lookup tables.
+4. Inspect [publication failure tests](tests/publication.test.ts), [independent contract tests](tests/reader-contract.test.ts), [draft recovery tests](tests/draft.test.ts), and [GitHub Actions](https://github.com/hrsh22/fieldnote-sightings/actions). CI builds the reader with the writer tree absent.
+5. Read the [completed verification record](docs/VERIFICATION.md) and [retry-safety evidence](evidence/retry-safety-review.json). They distinguish actual network observations from controlled automated failure tests.
 
-Sightings and coordinates are public. Use approximate locations for sensitive species. Demonstration records are labeled. Sponsored storage has no client-visible retention guarantee.
-
-## Run locally
-
-Use Node.js 22 and npm.
-
-```sh
-npm ci
-npm run dev
-# In another terminal:
-npm run dev:reader
-```
-
-Writer: `http://127.0.0.1:3001`. Reader: `http://127.0.0.1:4174`.
-
-No application secret or environment file is required. For a local reader link, optionally set `NEXT_PUBLIC_READER_URL=http://127.0.0.1:4174` in `apps/fieldnote/.env.local`. A Swarm ID app key is derived per origin: local and deployed writers have different notebooks even when using the same identity. Keep the production writer origin stable.
-
-```sh
-npm test
-npm run typecheck
-npm run check:boundaries
-npm run check:secrets
-npm run build
-```
+Sightings and coordinates are public. Use approximate locations for sensitive species. Demonstration records are labeled. The [format contract](format/README.md) specifies publication, identity and storage semantics.
 
 ## Two independent applications
 
@@ -72,6 +46,8 @@ An immutable address descriptor contains the publishing owner and topic. A signe
 
 The stored notebook is authoritative. Browser storage only retains an unsaved form draft. A failed request cannot silently become an empty notebook. Writes are serialized within the browser, check for an updated feed before publishing, and reconcile an uncertain response by reading the feed.
 
+Each draft keeps a stable sighting ID. If a success response is lost, saving that draft again checks the network for its earlier record and verifies the exact details and photo before returning success, without adding another sighting. An edited retry is kept for review rather than silently replacing the saved version. Reloaded drafts identify a missing selected photo and require reattachment or an explicit choice to continue without it. If browser storage is unavailable, the form warns that the draft survives only while the window stays open. [Retry safety checks](evidence/retry-safety-review.json).
+
 ## Rubric map
 
 | Requirement                                     | Reviewable implementation                                                                                                                   |
@@ -85,12 +61,10 @@ The stored notebook is authoritative. Browser storage only retains an unsaved fo
 | Specific visible errors                         | Capability, identity change, conflict, timeout, malformed object, version and integrity errors                                              |
 | Credentials excluded                            | Ignored local runtime directory, source secret scan, CI scan                                                                                |
 
-## Practical limits
-
-- One active publishing session per notebook. Browser locks and a pre-publication conflict check do not provide distributed multi-writer consensus.
-- Public notebooks, up to 1,000 sightings; each photo up to 5 MiB. This version creates records and does not edit or delete published observations.
-- The species picker is a small starter list with manual entry, not a complete taxonomy database.
-- Feed owner authentication proves the publishing key, not a person's legal identity or the truth of an observation. SHA-256 checks verify content against the index; readers rely on the selected Swarm gateway and SDK for network resolution.
-- A public reference does not guarantee perpetual availability. The reader accepts another HTTPS gateway if its default gateway is unavailable.
-
 See [verification notes](docs/VERIFICATION.md) for the distinction between automated checks and completed live tests. No official judging score is claimed.
+
+## Optional application links
+
+[Writer](https://fieldnote-sightings-hrsh22.vercel.app) · [Independent reader](https://fieldnote-reader-hrsh22.vercel.app) · [Public demonstration notebook](https://fieldnote-reader-hrsh22.vercel.app/#notebook=b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8).
+
+[Application use and development instructions](docs/DEVELOPMENT.md) are separate from the repository review. The review path above links directly to the submitted implementation and evidence.

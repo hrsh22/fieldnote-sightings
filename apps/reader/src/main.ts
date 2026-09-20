@@ -60,8 +60,8 @@ async function open(reference: string) {
     result = loaded;
     currentReference = reference;
     currentGateway = base;
-    input.value = reference;
     history.replaceState(null, "", `#notebook=${reference}`);
+    input.value = window.location.href;
     get("notebook-title").textContent = result.index.title;
     get("notebook-description").textContent = result.records.some(
       (r) => r.record.demonstration,

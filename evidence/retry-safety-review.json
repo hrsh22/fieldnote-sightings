@@ -1,0 +1,44 @@
+{
+  "checkedAt": "2026-09-20T13:16:05.883Z",
+  "kind": "local automated regression and source review",
+  "officialJudgingScore": null,
+  "publicWritesMade": 0,
+  "addressedGap": "A lost success response could lead to a new UUID on retry; reloaded drafts silently omitted their selected photograph.",
+  "changes": [
+    "Persist the draft UUID and publishing account before sending a write.",
+    "Read the current signed notebook and verify an existing draft record before any duplicate upload.",
+    "Require exact observation and photo digest/metadata match before confirming an earlier save.",
+    "Keep changed or unverifiable retries visible as errors without replacing the saved record.",
+    "Require photo reattachment or explicit omission after a page reload.",
+    "Explain public coordinates, immutable records, photo metadata and unavailable local draft storage."
+  ],
+  "checks": {
+    "tests": {
+      "passed": 29,
+      "failed": 0,
+      "addedRegressionTests": 9,
+      "command": "npm test"
+    },
+    "typecheck": "passed both applications",
+    "boundaries": "passed: 3 independent reader modules; zero writer imports",
+    "secrets": "passed",
+    "build": "passed both production builds",
+    "diffWhitespace": "passed",
+    "browserVisualReview": "Not performed for these changes in this evidence record."
+  },
+  "sourceSha256": {
+    "apps/fieldnote/src/lib/publish.ts": "65a4e191d5db84335aad32730f63386e81120d9a39cfb4fe170fa56c6c93c53b",
+    "apps/fieldnote/src/lib/draft.ts": "b56faab4f0794372044824079dde2466813222ca12e1952c61bd165d9502fe1b",
+    "apps/fieldnote/src/components/sighting-form.tsx": "3f7410613fab5e99857bedd99b8a24654df41990714edd8084ebeace01c07248",
+    "apps/fieldnote/src/components/fieldnote.tsx": "ae7a676afc3ce0bcf593dd87d468faeb06b29cf5dbefbae5cd4528ab57e05d25",
+    "tests/publication.test.ts": "980eb4191b0a03bd6c69165f09278c17357805a8767226017194653275811df6",
+    "tests/draft.test.ts": "fa0d51a85eab09ad18130ac3f73ba90f0ff1ff8084aace0b7e4a8ef2aa323729"
+  },
+  "protocolBehavior": [
+    "The retained draft ID is used for retry recovery against the current notebook.",
+    "One active writer publishes each notebook, as specified by the v1 format.",
+    "Clearing browser storage removes the local draft; published records remain network objects.",
+    "Photos are uploaded unchanged, preserving their embedded metadata.",
+    "Failure regressions use a controlled transport; publicWritesMade records the actual write count for this review."
+  ]
+}

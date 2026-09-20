@@ -305,6 +305,7 @@ export function Fieldnote() {
   async function save(
     draft: SightingDraft,
     photo?: { bytes: Uint8Array; caption: string; credit: string },
+    recordId?: string,
   ) {
     if (!client.current || busyRef.current) return false;
     busyRef.current = true;
@@ -317,6 +318,8 @@ export function Fieldnote() {
           client: client.current!,
           draft,
           photo,
+          recordId,
+          expectedOwner: currentOwner,
           appOrigin: window.location.origin,
           title: `${draft.observerName}'s field notes`,
           progress: setStage,
@@ -355,7 +358,9 @@ export function Fieldnote() {
         );
       }
       setNotice(
-        "Sighting saved to Swarm and checked. It is ready in the independent reader.",
+        result.recovered
+          ? "Your earlier save was found on Swarm and checked. No duplicate sighting was added."
+          : "Sighting saved to Swarm and checked. It is ready in the independent reader.",
       );
       return true;
     } catch (e) {
@@ -789,6 +794,7 @@ export function Fieldnote() {
         open={formOpen}
         onOpenChange={setFormOpen}
         name={connection.identity?.name ?? ""}
+        owner={currentOwner}
         canUpload={connection.canUpload}
         busy={busy}
         stage={stage}

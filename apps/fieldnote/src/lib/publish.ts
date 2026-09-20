@@ -13,7 +13,13 @@ import {
   type Notebook,
 } from "./format";
 import { FieldnoteError } from "./errors";
-import { readBytes, readHead, readIndex, type Head } from "./network";
+import {
+  jsonObject,
+  readBytes,
+  readHead,
+  readIndex,
+  type Head,
+} from "./network";
 
 export type Connection = {
   canUpload: boolean;
@@ -94,15 +100,19 @@ export async function publishSighting(options: {
   draft: SightingDraft;
   appOrigin: string;
   title: string;
+  recordId?: string;
+  expectedOwner?: string;
   photo?: { bytes: Uint8Array; caption: string; credit: string };
   progress?: (stage: string) => void;
   network?: PublishNetwork;
 }) {
   const { client, draft, progress = () => {} } = options;
   const transport = options.network ?? network;
-  const { owner, identity } = requireUpload(client);
+  const { owner, identity } = requireUpload(client, options.expectedOwner);
   const address = addressFor(owner);
-  const recordId = crypto.randomUUID();
+  // The form retains this ID across retries and reloads. A new ID on retry can
+  // turn a lost success response into a second real sighting.
+  const recordId = options.recordId ?? crypto.randomUUID();
   const record = SightingSchema.parse({
     ...draft,
     format: "org.fieldnote.sighting",
@@ -129,6 +139,49 @@ export async function publishSighting(options: {
   const previous = initial
     ? await transport.index(initial.reference, owner)
     : null;
+  const existing = previous?.records.find((entry) => entry.id === recordId);
+  if (existing && previous && initial) {
+    progress("Checking whether this sighting already saved");
+    const bytes = await transport.bytes(existing.reference, 32768);
+    if (
+      bytes.length !== existing.bytes ||
+      (await sha256(bytes)) !== existing.sha256
+    )
+      throw new FieldnoteError(
+        "readback",
+        "The earlier save could not be verified. Keep this draft and retry when the network is available.",
+      );
+    const saved = SightingSchema.parse(jsonObject(bytes));
+    const samePhoto = options.photo
+      ? saved.photo !== null &&
+        saved.photo.bytes === options.photo.bytes.length &&
+        saved.photo.sha256 === (await sha256(options.photo.bytes)) &&
+        saved.photo.mediaType === photoType &&
+        saved.photo.caption === options.photo.caption &&
+        saved.photo.credit === options.photo.credit
+      : saved.photo === null;
+    if (
+      !samePhoto ||
+      JSON.stringify({
+        ...record,
+        recordedAt: saved.recordedAt,
+        photo: saved.photo,
+      }) !== JSON.stringify(saved)
+    )
+      throw new FieldnoteError(
+        "earlier-save",
+        "An earlier version of this draft is already saved. Close this form and review your notebook. To record a different sighting, clear this draft first. Your changes have not been discarded.",
+      );
+    return {
+      addressReference: previous.addressReference,
+      indexReference: initial.reference,
+      sighting: saved,
+      entry: existing,
+      index: previous,
+      address,
+      recovered: true,
+    };
+  }
   if ((previous?.records.length ?? 0) >= MAX_RECORDS)
     throw new FieldnoteError(
       "notebook-full",
@@ -217,7 +270,7 @@ export async function publishSighting(options: {
   if (confirmed?.reference !== indexObject.reference)
     throw new FieldnoteError(
       "uncertain",
-      `The sighting was uploaded, but its notebook update could not be confirmed. Refresh your notebook before retrying to avoid a duplicate.${writeError ? " The publishing request was interrupted." : ""}`,
+      `The notebook update could not be confirmed. Keep this draft and try Save again: Fieldnote will check for the earlier save before adding it.${writeError ? " The publishing request was interrupted." : ""}`,
     );
   await transport.index(indexObject.reference, owner);
   return {
@@ -227,5 +280,6 @@ export async function publishSighting(options: {
     entry,
     index,
     address,
+    recovered: false,
   };
 }

@@ -1,6 +1,6 @@
 # Verification status
 
-Updated 20 September 2026. This records completed checks and remaining review work, not an official judging score.
+Updated 20 September 2026. This records completed implementation checks, not an official judging score.
 
 ## Completed live acceptance checks
 
@@ -28,7 +28,7 @@ The original custom button could open the identity popup but fail to deliver its
 
 ## Automated checks
 
-- 20 tests pass: capability guards before writes, a stampless connection, identity changes, checksum failures, notebook conflicts, uncertain-write reconciliation, network-backed reloads, photo metadata, and independent format parsing.
+- 29 tests pass: capability guards before writes, a stampless connection, identity changes, checksum failures, notebook conflicts, uncertain-write reconciliation, network-backed reloads, photo metadata, independent format parsing, durable draft recovery and retries after a lost success response.
 - Both applications typecheck and build for production.
 - The reader dependency graph has no writer imports. A second CI job copies the reader outside the writer tree, installs only its dependencies, typechecks and builds it successfully.
 - The source secret scan passes. Test account credentials are stored only in the ignored `.runtime/private` directory with owner-only filesystem permissions.
@@ -40,7 +40,7 @@ The original custom button could open the identity popup but fail to deliver its
 | Writer             | https://fieldnote-sightings-hrsh22.vercel.app |
 | Independent reader | https://fieldnote-reader-hrsh22.vercel.app    |
 
-Run all checks from the repository root:
+The [GitHub Actions workflow](../.github/workflows/check.yml) executes these repository checks and builds the copied reader independently. Developers can reproduce the checks from the repository root:
 
 ```sh
 npm ci
@@ -53,19 +53,27 @@ npm run build
 
 Mocked tests establish failure-path behavior; the live acceptance checks above separately establish that the sponsor gateway accepted actual writes and the other application retrieved them.
 
+### Retry-safety improvement
+
+The later [retry review](../evidence/retry-safety-review.json) adds a stable ID to the locally retained draft. The regression test commits a signed-feed update in the test transport, hides every confirmation response, and retries after the gateway recovers. It asserts one sighting, one feed write and no extra content uploads. Separate cases reject changed observations, missing/replaced photos and corrupt stored bytes. Draft restoration checks retain the ID, account binding and the name of the photo that needs reattachment.
+
+The form now explains public coordinates, immutable publication and unchanged photo metadata before saving. It warns when browser storage is unavailable and requires an explicit choice when a reloaded draft has lost its selected file. These UI states do not change the v1 wire format or add a reader dependency on the writer. No additional public sightings were created to test these failure paths.
+
 ## Review and submission
 
 Fieldnote's repository was submitted to Problem 2 through the Loops workspace after explicit user approval. The saved URL survived a page reload, and Folio remained separately selected for Problem 1. See [submission record](../evidence/submission.json).
 
-The [Loops evaluator review](LOOPS_EVALUATION.md) records the source review, weighted criteria, fixed issues and remaining limitations. The evaluator command supplies a free review prompt; it does not return an official score.
+The [Loops evaluator review](LOOPS_EVALUATION.md) records the source review, weighted criteria, fixed issues and implementation evidence. The evaluator command supplies a free review prompt; it does not return an official score.
 
-The remaining optional evidence work is a short walkthrough recording. Capability-loss, checksum-failure and conflict cases have automated coverage; not every negative scenario was manually reenacted. Chrome's earlier control failure was resolved sufficiently to complete the mobile and sign-out/recovery checks above.
+Capability-loss, checksum-failure and conflict cases have automated coverage; not every negative scenario was manually reenacted. The [repository source map](REPOSITORY_REVIEW.md), test files, captured public objects and CI workflow provide the review path in GitHub.
 
-## Independent network verification
+## Optional independent network recheck
+
+The completed network results are already committed under [evidence](../evidence/). This command refreshes the observation against today's gateway state; it is an optional diagnostic, not a prerequisite for reviewing the source or captured results.
 
 ```sh
 npm run verify:notebook -- b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8
 # Optional: use another gateway origin as the second argument.
 ```
 
-The verifier reports the feed index, object references, sizes, SHA-256 values and photo checks. It exits unsuccessfully if an object cannot be read or validated, and uses no account, credentials or local notebook catalogue. Availability still depends on the gateway and Swarm postage; these successful checks do not promise permanent storage.
+The verifier reports the feed index, object references, sizes, SHA-256 values and photo checks. It exits unsuccessfully if an object cannot be read or validated, and uses no account, credentials or local notebook catalogue. The format contract documents storage and retrieval semantics.

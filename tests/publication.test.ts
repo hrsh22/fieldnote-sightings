@@ -189,6 +189,15 @@ test("switching identity during publication prevents the next write", async () =
   assert.equal(s.uploads.length, 1);
   assert.equal(s.feedWrites, 0);
 });
+test("a draft cannot move to another account while its form is waiting to render the connection change", async () => {
+  const s = setup();
+  await assert.rejects(
+    run(s, { expectedOwner: "f".repeat(40) }),
+    /account changed/,
+  );
+  assert.equal(s.uploads.length, 0);
+  assert.equal(s.feedWrites, 0);
+});
 test("corrupt upload readback cannot advance the notebook", async () => {
   const s = setup();
   s.network.bytes = async () => encode({ corrupt: true });
@@ -261,4 +270,81 @@ test("photo upload is capability-gated and carries enough metadata to retrieve i
   assert.equal(result.sighting.photo?.bytes, bytes.length);
   assert.equal(result.sighting.photo?.sha256, await sha256(bytes));
   assert.equal(s.uploads.length, 4);
+});
+
+test("retry after an uncertain response recovers the saved draft without another upload", async () => {
+  const s = setup();
+  const recordId = crypto.randomUUID();
+  const liveHead = s.network.head;
+  let obscureCommittedHead = true;
+  s.network.head = async (...args) => {
+    if (obscureCommittedHead && s.feedWrites > 0)
+      throw new Error("Gateway response lost after the signed update");
+    return liveHead(...args);
+  };
+  await assert.rejects(run(s, { recordId }), /could not be confirmed/);
+  const uploadsBeforeRetry = s.uploads.length;
+  assert.equal(s.feedWrites, 1);
+  obscureCommittedHead = false;
+  const recovered = await run(s, { recordId });
+  assert.equal(recovered.recovered, true);
+  assert.equal(recovered.sighting.id, recordId);
+  assert.equal(recovered.index.records.length, 1);
+  assert.equal(s.feedWrites, 1);
+  assert.equal(s.uploads.length, uploadsBeforeRetry);
+});
+
+test("a retry with changed details cannot silently discard the new draft or duplicate its earlier save", async () => {
+  const s = setup();
+  const recordId = crypto.randomUUID();
+  await run(s, { recordId });
+  await assert.rejects(
+    run(s, { recordId, draft: { ...draft, count: 2 } }),
+    /earlier version of this draft is already saved/,
+  );
+  assert.equal(s.uploads.length, 3);
+  assert.equal(s.feedWrites, 1);
+});
+
+test("photo retries verify the original photograph and reject missing or replaced photos", async () => {
+  const s = setup();
+  const recordId = crypto.randomUUID();
+  const photo = {
+    bytes: Uint8Array.of(137, 80, 78, 71, 13, 10, 26, 10, 1),
+    caption: "A test photograph",
+    credit: "Example observer",
+  };
+  await run(s, { recordId, photo });
+  assert.equal((await run(s, { recordId, photo })).recovered, true);
+  await assert.rejects(run(s, { recordId }), /earlier version/);
+  await assert.rejects(
+    run(s, {
+      recordId,
+      photo: { ...photo, bytes: new Uint8Array([...photo.bytes, 2]) },
+    }),
+    /earlier version/,
+  );
+  assert.equal(s.uploads.length, 4);
+  assert.equal(s.feedWrites, 1);
+});
+
+test("an already-saved ID is not enough without verified stored bytes", async () => {
+  const s = setup();
+  const recordId = crypto.randomUUID();
+  await run(s, { recordId });
+  s.network.bytes = async () => encode({ altered: true });
+  await assert.rejects(
+    run(s, { recordId }),
+    /earlier save could not be verified/,
+  );
+  assert.equal(s.feedWrites, 1);
+});
+
+test("a retained draft ID does not merge two different observations", async () => {
+  const s = setup();
+  const first = await run(s, { recordId: crypto.randomUUID() });
+  const second = await run(s, { recordId: crypto.randomUUID() });
+  assert.notEqual(first.sighting.id, second.sighting.id);
+  assert.equal(second.recovered, false);
+  assert.equal(second.index.records.length, 2);
 });

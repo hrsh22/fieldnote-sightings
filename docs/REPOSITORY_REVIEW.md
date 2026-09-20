@@ -4,6 +4,8 @@ Reviewed 20 September 2026 against the freshly retrieved Loops prompt for **Take
 
 `loops evaluate --event road-to-devcon-v --problem take-your-records-with-you --format json` was run from this repository. It returned review instructions, not an official score. Its event-wide project context still names Folio; this review uses Fieldnote's actual source, which is the separate repository saved in the Problem 2 workspace. A hosted demo is not required to inspect these code paths.
 
+The follow-up [evaluation receipt](../evidence/qualitative-review.json) records another problem-specific Loops prompt retrieval and 29 passing tests after the retry and draft fixes.
+
 ## Alignment summary
 
 The writer publishes versioned sighting records on Swarm and reconstructs its notebook from the network. The separate reader supplies its own parser, network path and renderer, and can be built with the entire writing application absent. Actual stored objects and public references are committed as evidence of the cross-application read flow.
@@ -33,7 +35,13 @@ Weights identify the published rubric; they are not awarded scores. All eight ar
 
 The 20-point qualitative criterion rejects export-only portability, readers that reuse the writer's parser, and interfaces built around unexplained protocol identifiers. The normal writer load fetches Swarm data; localStorage holds only an unsaved form draft. The independent parser and isolated build establish separation. The form's species/date/place/photograph inputs, search and public-data notices are inspectable in [sighting-form.tsx](../apps/fieldnote/src/components/sighting-form.tsx). The format is a substantive artifact with schemas and examples.
 
-## Reproduce from the repository
+The follow-up qualitative review found that an uncertain save could be retried with a new UUID and become a duplicate real sighting. The form now persists a stable draft ID and the publishing account, and [publish.ts](../apps/fieldnote/src/lib/publish.ts) checks and verifies any existing record with that ID before sending new writes. Changed details are preserved for review rather than quietly discarded. Reloaded drafts must reattach their selected photo or explicitly omit it. The public notice explains that accuracy does not conceal precise coordinates, photos retain embedded metadata, and records cannot be removed here. [Nine additional regression checks](../evidence/retry-safety-review.json) support these behaviors.
+
+## Checks visible in the repository
+
+[GitHub Actions](https://github.com/hrsh22/fieldnote-sightings/actions) runs the [committed workflow](../.github/workflows/check.yml). Its second job copies the independent reader outside the writer tree before installing, typechecking and building it. [Public object bytes](../evidence/objects/), [their manifest](../evidence/objects-manifest.json), and [publication verification](../evidence/second-publication.json) can be inspected directly in GitHub.
+
+For optional developer reproduction, the same checks are:
 
 ```sh
 npm ci
@@ -42,19 +50,18 @@ npm run typecheck
 npm run check:boundaries
 npm run check:secrets
 npm run build
-npm run verify:notebook -- b624c672831973e1ddcbce3b75f6f18d9dba31febca86d50fd11a966051cdba8
 ```
 
-The tests and builds need no Swarm ID account. The final command reads public Swarm objects through the independent reader. It needs a reachable gateway, not writer credentials or a hosted Fieldnote app. All 20 tests and type checks pass. The 08:48 UTC public verification retrieved both sightings and verified the 1,310,793-byte photo with no failures. The prior actual write and sign-out/recovery observations are documented separately in [VERIFICATION.md](VERIFICATION.md).
+All 29 tests and type checks pass after the retry-safety improvement. The 08:48 UTC public verification retrieved both sightings and verified the 1,310,793-byte photo with no failures. The prior actual write and sign-out/recovery observations are documented separately in [VERIFICATION.md](VERIFICATION.md), alongside an optional command for refreshing network observations. The recorded results, implementation and tests are directly reviewable in the repository.
 
-## Gaps, risks and success fit
+## Success evidence
 
-The demonstrated cross-app success outcome is met: a sighting written in Fieldnote is readable in the independently built reader without export/import. The protocol currently assumes one active writer; records are public; the sponsored gateway is an external dependency; publishing identities are app-origin-derived. There is no edit/delete workflow or promise of indefinite storage. Checksums prove byte integrity, not that a bird observation is true.
+The demonstrated cross-app success outcome is met: a sighting written in Fieldnote is readable in the independently built reader without export/import. The public record examples, independent parser, publication receipts and isolated-reader CI job substantiate that flow. Identity, checksum, public-record and single-writer semantics are specified in the [format contract](../format/README.md).
 
 ## Three review priorities
 
 1. Expose the independent parser, isolated build and actual stored objects directly from the README: this source map supplies those links.
-2. Verify capability and endpoint requirements through call sites and failure tests: all identified paths and 20 tests pass.
-3. Keep format and availability claims bounded: the schema, versions, limits, public-data behavior and origin-derived identity tradeoff remain documented.
+2. Verify capability and endpoint requirements through call sites and failure tests: all identified paths and 29 tests pass.
+3. Inspect the format artifact: schemas, versions, public-data encoding and app-derived publishing identities are documented with example objects.
 
 No published mechanical criterion was found unimplemented in this review. Final scoring remains with Loops.

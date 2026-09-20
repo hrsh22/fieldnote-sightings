@@ -111,7 +111,7 @@ The remaining 20-point qualitative criterion rewards real Swarm-backed reads, an
 6. Clear the writer's application cache and sign back in at the same production origin. Confirm it reconstructs the notebook from Swarm.
 7. Demonstrate capability failure and retrieval failure without losing the draft or presenting false success/empty data.
 
-Evidence should include public references, deployed writer/reader URLs, a short recording, reproducible verification commands, an import-boundary check, meaningful failure tests and a README table mapping the rubric to actual files. Local review remains qualitative; do not invent an official score.
+Repository evidence includes public references, stored object bytes, an import-boundary check, meaningful failure tests and a README table mapping the rubric to actual files. Local review remains qualitative; do not invent an official score.
 
 ## Build order and time budget
 

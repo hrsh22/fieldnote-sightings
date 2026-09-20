@@ -118,6 +118,8 @@ Photos are stored separately from their JSON record. A missing photo does not ma
 
 The writer gates every write on current authentication and upload capability. It uploads and reads back the photo, record, descriptor and index before advancing the feed. The feed becomes the public commit point. A timeout is reconciled by reading the latest feed before reporting uncertainty. The app serializes same-origin tabs with Web Locks and checks for a changed feed before publishing, but does not claim a distributed lock across devices. Use one active writer at a time.
 
+A sighting's `id` remains stable when retrying the same draft. Before uploading, the writer checks the latest notebook for that ID. If found, it verifies the existing record's size, checksum, publisher, observer, full observation and photo digest/metadata. Matching data confirms the earlier save without another upload. Different data produces a visible conflict, preserving the edited draft; it does not create a second record automatically. This is retry recovery, not distributed exactly-once publication. The draft ID is optional local recovery information, never the source of the notebook's contents.
+
 Readers must bound object sizes, time out network requests and report invalid, unsupported, missing or corrupt records. An incomplete notebook is visibly incomplete. Never silently present a failed retrieval as an empty notebook.
 
 Version 1 is public and unencrypted. A notebook link is a public locator, not a confidentiality boundary. The subsidised gateway's postage lifetime is not visible through its API. This format provides portability and interpretation, not a promise that storage will last forever.

@@ -22,14 +22,14 @@ Fieldnote is a Swarm-backed birding notebook. Sign in with Swarm ID, record a sp
 
 Records carry their own format identifier, version, meaning, photo metadata and attribution in the actual stored bytes. A stable public descriptor discovers the latest signed notebook index. Open Fieldbook, a separately built and deployed reader with its own parser and network code, retrieves those bytes without signing in, importing a file, accessing the writer or depending on a local catalogue.
 
-The repository includes the Next.js/TypeScript writer, independent TypeScript reader, complete format contract and schemas, 20 automated tests, an isolated reader build in CI, and reproducible live network evidence. A fresh account published two clearly labeled demonstration sightings and a photograph; the original reader link discovered the second update, and an incognito session retrieved both records and the photo. The local Bee and tunnel were stopped for these checks.
+The repository includes the Next.js/TypeScript writer, independent TypeScript reader, complete format contract and schemas, 29 automated tests, an isolated reader build in CI, and reproducible live network evidence. A fresh account published two clearly labeled demonstration sightings and a photograph; the original reader link discovered the second update, and an incognito session retrieved both records and the photo. The local Bee and tunnel were stopped for these checks.
 
-Published observations are public. Storage availability depends on Swarm and its postage; the project does not claim permanent retention or distributed multi-writer safety. See docs/VERIFICATION.md for completed checks and outstanding manual review items.
+Published observations are public. The format contract defines the single-writer publication procedure and record validation. See [verification evidence](VERIFICATION.md) for completed checks.
 
-**Suggested walkthrough:**
+**Repository review path:**
 
-1. Open the writer's demonstration notebook.
-2. Open the Common Kingfisher record and view its photograph, date-only precision, approximate location and attribution.
-3. Open the same notebook in Open Fieldbook. Inspect the Purple Sunbird's local time, UTC offset and location uncertainty.
-4. Expand the network evidence and inspect a raw JSON record through `/bytes`.
-5. Run `npm run verify:notebook -- <public-reference>` or review the captured evidence and CI results.
+1. Read [the source map](REPOSITORY_REVIEW.md) for all eight technical checks and the qualitative criterion.
+2. Inspect [exact stored objects](../evidence/objects/) and the [format contract](../format/README.md).
+3. Follow the writer network load and publish functions, then the independent reader's own parser and retrieval code.
+4. Inspect publication failure tests, draft recovery tests and the isolated-reader CI job.
+5. Read the captured publication receipts and retry-safety verification record.

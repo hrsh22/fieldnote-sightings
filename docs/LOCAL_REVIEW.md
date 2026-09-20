@@ -15,6 +15,6 @@ Reviewed 20 September 2026 against the Problem 2 brief and free evaluator prompt
 
 The 20-point qualitative criterion is supported by a usable birding workflow, meaningful date/time/location precision, photo attribution, public-data notices, a distinct independent reader, documented schemas and retrieval rules, and real network-backed evidence. The same notebook link discovers later sightings without exporting or importing a file.
 
-Follow-up review completed the 375-pixel mobile inspection, fixed reader overflow and stale species names, verified sign-out/storage-clear/sign-back-in recovery, and demonstrated two specific reader errors. See [the Loops evaluator report](LOOPS_EVALUATION.md). A short walkthrough recording remains optional evidence work; no official score is claimed.
+Follow-up review completed the 375-pixel mobile inspection, fixed reader overflow and stale species names, verified sign-out/storage-clear/sign-back-in recovery, and demonstrated two specific reader errors. See [the Loops evaluator report](LOOPS_EVALUATION.md). The current [repository review](REPOSITORY_REVIEW.md) also documents retry-safety fixes and 29 passing tests. Source, test cases and committed evidence form the review path; no official score is claimed.
 
-Practical limits remain explicit: public unencrypted records, origin-derived publishing keys, one active writer, a small species suggestion list, a 1,000-record limit, no edit/delete workflow, and no perpetual-retention guarantee.
+The [format contract](../format/README.md) defines the public record encoding, app-derived publishing identity, one-active-writer procedure and object validation rules.

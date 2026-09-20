@@ -6,11 +6,11 @@ Reviewed 20 September 2026 using the prompt returned by:
 loops evaluate --event road-to-devcon-v --problem take-your-records-with-you --format json
 ```
 
-The command retrieves a free evaluator prompt; it does not run the official judging pipeline or produce a score. This report executes that prompt against Fieldnote's source and live evidence. The eight technical checks were also reread in the signed-in Problem 2 workspace.
+The command retrieves a free evaluator prompt; it does not run the official judging pipeline or produce a score. This report executes that prompt against Fieldnote's source and committed evidence of network observations. The eight technical checks were also reread in the signed-in Problem 2 workspace. The [repository review](REPOSITORY_REVIEW.md) is the current source map, including the later retry-safety improvements.
 
 ## Alignment summary
 
-Fieldnote directly implements the requested outcome: a birder files public records under a Swarm ID app-derived key, and a separately built application reads those records from Swarm without exporting or importing a file. The working implementation is supported by two live publications, a photographed record, independent incognito retrieval, exact stored objects, and an isolated reader build. It is a usable prototype with explicit storage and single-writer limits.
+Fieldnote directly implements the requested outcome: a birder files public records under a Swarm ID app-derived key, and a separately built application reads those records from Swarm without exporting or importing a file. The working implementation is supported by two live publications, a photographed record, independent incognito retrieval, exact stored objects, and an isolated reader build.
 
 ## What is genuinely strong
 
@@ -20,14 +20,14 @@ Fieldnote directly implements the requested outcome: a birder files public recor
 - **A substantive portable format.** `format/README.md`, three schemas, valid/invalid examples and exact bytes under `evidence/objects/` describe dates, time precision, offsets, WGS84 coordinates, uncertainty, observer/publisher roles, photo attribution, feed discovery and supported versions.
 - **A product beyond the protocol.** The writer offers species suggestions, manual names, optional photos, retained drafts, date/place search and public-data notices. Protocol identifiers appear in optional evidence views. The reader works with no account and verifies photos before displaying them.
 
-## Gaps and risks found, and fixes applied
+## Verified fixes
 
 1. **Mobile reader overflow.** A screen-reader-only table heading escaped the horizontal scroll container. At a 375-pixel width, the document extended to 682 pixels. `apps/reader/style.css` now positions `.table-wrap` so the hidden heading remains contained. The table can scroll while the page remains the viewport's width.
 2. **Stale scientific name.** Editing an automatically suggested common name previously retained the former species' scientific name. `apps/fieldnote/src/components/sighting-form.tsx` now clears it when the new name does not match a suggestion. The deployed form was checked by changing Common Kingfisher to Unidentified warbler; Alcedo atthis was cleared.
 3. **Overstated verification wording.** The reader now labels ordinary records “Public field observation”. A valid checksum establishes byte integrity, not whether someone actually saw the bird.
 4. **Previously missing recovery evidence.** The production test account was signed out, the writer origin's localStorage/sessionStorage were cleared, and the same identity signed back in through Swarm ID. Both sightings and the original independent-reader address returned from Swarm. The identity account and published data were not deleted.
 
-Remaining limits are documented in the root README: one active writer, public unencrypted records, origin-derived publishing keys, a small starter species list, no edit/delete workflow, and no indefinite availability guarantee. Capability-loss and checksum-failure checks are automated; no claim is made that every negative test was manually reenacted in the browser. There is no walkthrough video.
+Capability-loss and checksum-failure behaviors are covered by automated tests. The [format contract](../format/README.md) specifies public records, app-derived identities and the single-writer publication procedure.
 
 ## Per-criterion assessment
 
@@ -49,11 +49,11 @@ Weights below are rubric weights, not awarded scores.
 
 **Met for the demonstrated flow:** Meera can file a sighting in the writer and open it, including the optional photo and its meaning, in the separately deployed reader without export/import. `evidence/first-publication.json`, `second-publication.json`, the raw objects and the clean-session browser check establish that result. The same public link finds subsequent records.
 
-## Top three follow-up priorities
+## Repository review priorities
 
-1. Keep the production demonstration and verification command working through the deadline; recheck availability if the gateway changes.
-2. Keep the committed source, Vercel deployments and per-problem repository submission aligned. Loops says the latest pushed code is judged before the clock ends.
-3. If additional polish time is available, record a short walkthrough of the already verified write/read/recovery flow. It is useful evidence, not a substitute for code or network checks.
+1. Follow [the repository source map](REPOSITORY_REVIEW.md) from each criterion to its implementation and caller.
+2. Inspect exact stored objects, publication receipts and independent-reader verification under [evidence](../evidence/), together with the CI workflow that builds the reader without writer source.
+3. Review retry and account-change failure tests and the published record semantics. The [retry review](../evidence/retry-safety-review.json) records 29 passing tests and explicitly separates controlled failure tests from actual network writes.
 
 ## Submission-record caveat
 

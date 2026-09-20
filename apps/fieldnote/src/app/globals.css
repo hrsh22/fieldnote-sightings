@@ -860,9 +860,9 @@ footer > div > span {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
-  color: #7f8e72;
+  color: #52614b;
   padding: 14px 0;
   margin-top: 7px;
 }
@@ -884,13 +884,35 @@ footer > div > span {
   border-top: 1px solid #dce3d2;
 }
 .form-footer > span {
-  font-size: 10px;
-  color: #86947a;
+  font-size: 12px;
+  color: #52614b;
   flex: 1;
 }
 .form-footer [data-slot] {
   font-size: 11px;
   min-width: 150px;
+}
+.draft-photo-warning {
+  padding: 14px 16px;
+  border: 1px solid #d8cda8;
+  background: #f8f2df;
+  border-radius: 7px;
+  font-size: 12px;
+  color: #64552f;
+  overflow-wrap: anywhere;
+}
+.draft-photo-warning p {
+  margin: 5px 0 9px;
+}
+.draft-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding-top: 16px;
+  font-size: 12px;
+}
+.draft-actions p {
+  width: 100%;
 }
 .travel-steps {
   list-style: none;
